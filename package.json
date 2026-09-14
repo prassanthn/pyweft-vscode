@@ -1,0 +1,71 @@
+{
+  "name": "pyweft",
+  "displayName": "PyWeft",
+  "description": "Language support for PyWeft .weft components: XML templates with Python code-behind.",
+  "version": "0.1.0",
+  "publisher": "prassanthn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prassanthn/pyweft-vscode.git"
+  },
+  "homepage": "https://github.com/prassanthn/PyWeft",
+  "bugs": {
+    "url": "https://github.com/prassanthn/pyweft-vscode/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "pyweft",
+    "weft",
+    "python",
+    "ui",
+    "pyodide"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "weft",
+        "aliases": [
+          "PyWeft",
+          "weft"
+        ],
+        "extensions": [
+          ".weft"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "weft",
+        "scopeName": "source.weft",
+        "path": "./syntaxes/weft.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.python": "python",
+          "meta.embedded.line.python": "python"
+        }
+      }
+    ],
+    "snippets": [
+      {
+        "language": "weft",
+        "path": "./snippets/weft.json"
+      }
+    ]
+  },
+  "scripts": {
+    "test": "node test/tokenize.mjs",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.0.0",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.0.0"
+  }
+}

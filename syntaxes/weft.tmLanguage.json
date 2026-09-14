@@ -1,0 +1,221 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "PyWeft",
+  "scopeName": "source.weft",
+  "fileTypes": ["weft"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#code-block" },
+    { "include": "#template-block" },
+    { "include": "#tag" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.block.xml.weft",
+      "begin": "<!--",
+      "end": "-->"
+    },
+
+    "code-block": {
+      "name": "meta.block.code.weft",
+      "begin": "(<)(code)\\s*(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.section.weft" },
+        "3": { "name": "punctuation.definition.tag.end.weft" }
+      },
+      "end": "(</)(code)\\s*(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.section.weft" },
+        "3": { "name": "punctuation.definition.tag.end.weft" }
+      },
+      "contentName": "meta.embedded.block.python",
+      "patterns": [{ "include": "source.python" }]
+    },
+
+    "template-block": {
+      "name": "meta.block.template.weft",
+      "begin": "(<)(template)\\s*(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.section.weft" },
+        "3": { "name": "punctuation.definition.tag.end.weft" }
+      },
+      "end": "(</)(template)\\s*(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.section.weft" },
+        "3": { "name": "punctuation.definition.tag.end.weft" }
+      },
+      "patterns": [{ "include": "#template-content" }]
+    },
+
+    "template-content": {
+      "patterns": [
+        { "include": "#comment" },
+        { "include": "#interpolation" },
+        { "include": "#tag" },
+        { "include": "#entity" }
+      ]
+    },
+
+    "interpolation": {
+      "name": "meta.interpolation.weft",
+      "begin": "\\{\\{",
+      "beginCaptures": { "0": { "name": "punctuation.section.interpolation.begin.weft" } },
+      "end": "\\}\\}",
+      "endCaptures": { "0": { "name": "punctuation.section.interpolation.end.weft" } },
+      "contentName": "meta.embedded.line.python",
+      "patterns": [{ "include": "source.python" }]
+    },
+
+    "entity": {
+      "name": "constant.character.entity.xml.weft",
+      "match": "&(?:[A-Za-z][A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);"
+    },
+
+    "tag": {
+      "patterns": [
+        { "include": "#control-tag" },
+        { "include": "#component-tag" },
+        { "include": "#html-tag" }
+      ]
+    },
+
+    "control-tag": {
+      "name": "meta.tag.control.weft",
+      "begin": "(</?)(If|ElseIf|Else|For)(?=[\\s/>])",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "keyword.control.weft" }
+      },
+      "end": "(/?>)",
+      "endCaptures": { "1": { "name": "punctuation.definition.tag.end.weft" } },
+      "patterns": [{ "include": "#attributes" }]
+    },
+
+    "component-tag": {
+      "name": "meta.tag.component.weft",
+      "begin": "(</?)([A-Z][\\w.\\-]*)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.component.weft" }
+      },
+      "end": "(/?>)",
+      "endCaptures": { "1": { "name": "punctuation.definition.tag.end.weft" } },
+      "patterns": [{ "include": "#attributes" }]
+    },
+
+    "html-tag": {
+      "name": "meta.tag.weft",
+      "begin": "(</?)([a-z][\\w.\\-:]*)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.weft" }
+      },
+      "end": "(/?>)",
+      "endCaptures": { "1": { "name": "punctuation.definition.tag.end.weft" } },
+      "patterns": [{ "include": "#attributes" }]
+    },
+
+    "attributes": {
+      "patterns": [
+        { "include": "#event-attribute" },
+        { "include": "#binding-attribute" },
+        { "include": "#each-attribute" },
+        { "include": "#expression-attribute" },
+        { "include": "#plain-attribute" }
+      ]
+    },
+
+    "event-attribute": {
+      "comment": "@click=\"...\" or py-at-click=\"...\": the value is a handler name or a Python expression",
+      "name": "meta.attribute.event.weft",
+      "begin": "(@|py-at-)([A-Za-z_][\\w.\\-]*)\\s*(=)\\s*([\"'])",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.directive.event.weft" },
+        "2": { "name": "entity.other.attribute-name.event.weft" },
+        "3": { "name": "punctuation.separator.key-value.weft" },
+        "4": { "name": "punctuation.definition.string.begin.weft" }
+      },
+      "end": "\\4",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.weft" } },
+      "contentName": "meta.embedded.line.python",
+      "patterns": [{ "include": "source.python" }]
+    },
+
+    "binding-attribute": {
+      "comment": ":prop=\"...\" or py-colon-prop=\"...\": the value is a Python expression",
+      "name": "meta.attribute.binding.weft",
+      "begin": "(:|py-colon-)([A-Za-z_][\\w.\\-]*)\\s*(=)\\s*([\"'])",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.directive.binding.weft" },
+        "2": { "name": "entity.other.attribute-name.binding.weft" },
+        "3": { "name": "punctuation.separator.key-value.weft" },
+        "4": { "name": "punctuation.definition.string.begin.weft" }
+      },
+      "end": "\\4",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.weft" } },
+      "contentName": "meta.embedded.line.python",
+      "patterns": [{ "include": "source.python" }]
+    },
+
+    "each-attribute": {
+      "comment": "each=\"item in items\" on <For>",
+      "name": "meta.attribute.each.weft",
+      "begin": "(each)\\s*(=)\\s*([\"'])",
+      "beginCaptures": {
+        "1": { "name": "entity.other.attribute-name.expression.weft" },
+        "2": { "name": "punctuation.separator.key-value.weft" },
+        "3": { "name": "punctuation.definition.string.begin.weft" }
+      },
+      "end": "\\3",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.weft" } },
+      "contentName": "meta.embedded.line.python",
+      "patterns": [
+        {
+          "match": "\\G\\s*([A-Za-z_]\\w*)\\s+(in)\\b",
+          "captures": {
+            "1": { "name": "variable.parameter.loop.weft" },
+            "2": { "name": "keyword.operator.logical.python" }
+          }
+        },
+        { "include": "source.python" }
+      ]
+    },
+
+    "expression-attribute": {
+      "comment": "cond=, key=, index=: framework attributes whose value is Python",
+      "name": "meta.attribute.expression.weft",
+      "begin": "(cond|key|index)\\s*(=)\\s*([\"'])",
+      "beginCaptures": {
+        "1": { "name": "entity.other.attribute-name.expression.weft" },
+        "2": { "name": "punctuation.separator.key-value.weft" },
+        "3": { "name": "punctuation.definition.string.begin.weft" }
+      },
+      "end": "\\3",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.weft" } },
+      "contentName": "meta.embedded.line.python",
+      "patterns": [{ "include": "source.python" }]
+    },
+
+    "plain-attribute": {
+      "comment": "ordinary attribute; the value may contain {{ }} holes",
+      "name": "meta.attribute.weft",
+      "begin": "([A-Za-z_][\\w.\\-:]*)\\s*(=)\\s*([\"'])",
+      "beginCaptures": {
+        "1": { "name": "entity.other.attribute-name.weft" },
+        "2": { "name": "punctuation.separator.key-value.weft" },
+        "3": { "name": "punctuation.definition.string.begin.weft" }
+      },
+      "end": "\\3",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.weft" } },
+      "contentName": "string.quoted.attribute.weft",
+      "patterns": [
+        { "include": "#interpolation" },
+        { "include": "#entity" }
+      ]
+    }
+  }
+}

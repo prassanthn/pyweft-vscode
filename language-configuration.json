@@ -37,8 +37,8 @@
   ],
   "folding": {
     "markers": {
-      "start": "^\\s*<(template|code|If|ElseIf|Else|For)\\b",
-      "end": "^\\s*</(template|code|If|ElseIf|Else|For)\\s*>"
+      "start": "^\\s*<(template|code|style|If|ElseIf|Else|For)\\b",
+      "end": "^\\s*</(template|code|style|If|ElseIf|Else|For)\\s*>"
     }
   },
   "wordPattern": "[A-Za-z_][\\w.\\-]*"

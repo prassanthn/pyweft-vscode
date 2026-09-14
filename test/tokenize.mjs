@@ -40,6 +40,7 @@ const registry = new vsctm.Registry({
       return vsctm.parseRawGrammar(readFileSync(grammarPath, "utf8"), grammarPath);
     }
     if (scopeName === "source.python") return PYTHON_STUB;
+    if (scopeName === "source.css") return { scopeName: "source.css", patterns: [] };
     return null;
   },
 });
@@ -64,6 +65,10 @@ const SAMPLE = `<template>
     <Else><p>some</p></Else>
   </div>
 </template>
+
+<style>
+.todo-app > input { color: red }
+</style>
 
 <code>
 draft: str = ""
@@ -185,6 +190,12 @@ expect('draft: str = ""', "draft", "meta.embedded.block.python");
 expect("def add(self):", "def add", "meta.embedded.block.python");
 expect('self.items.append', '{"id": 1', "meta.embedded.block.python");
 expectNot('self.items.append', '{"id": 1', "meta.interpolation.weft");
+
+// style block is CSS, and its `>` combinator is not a tag
+expect("<style>", "style", "entity.name.tag.section.weft");
+expect(".todo-app > input", ".todo-app > input", "meta.embedded.block.css");
+expectNot(".todo-app > input", "input", "meta.tag");
+expect("</style>", "style", "entity.name.tag.section.weft");
 
 // the whole template region is scoped, and the code region is not
 expect("<p class=\"hint\">", "hint", "meta.block.template.weft");

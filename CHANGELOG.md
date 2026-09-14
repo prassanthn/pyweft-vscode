@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+- `<style>` blocks (component-scoped CSS, PyWeft 0.0.2) are highlighted as
+  CSS and folded; `style` snippet.
+- The shadow Python document ignores `<style>` blocks.
+
 ## 0.2.0
 
 - Python IntelliSense in `.weft` files: completion, hover, go-to-definition

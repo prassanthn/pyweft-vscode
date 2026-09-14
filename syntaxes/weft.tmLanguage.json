@@ -6,6 +6,7 @@
   "patterns": [
     { "include": "#comment" },
     { "include": "#code-block" },
+    { "include": "#style-block" },
     { "include": "#template-block" },
     { "include": "#tag" }
   ],
@@ -14,6 +15,24 @@
       "name": "comment.block.xml.weft",
       "begin": "<!--",
       "end": "-->"
+    },
+
+    "style-block": {
+      "name": "meta.block.style.weft",
+      "begin": "(<)(style)\\s*(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.section.weft" },
+        "3": { "name": "punctuation.definition.tag.end.weft" }
+      },
+      "end": "(</)(style)\\s*(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.weft" },
+        "2": { "name": "entity.name.tag.section.weft" },
+        "3": { "name": "punctuation.definition.tag.end.weft" }
+      },
+      "contentName": "meta.embedded.block.css",
+      "patterns": [{ "include": "source.css" }]
     },
 
     "code-block": {

@@ -17,11 +17,12 @@ the same quality and settings as in a `.py` file, including your project's
 interpreter and installed packages.
 
 **Syntax highlighting** for the whole file. The `<code>` block is Python,
-every expression is Python, `<If>`, `<ElseIf>`, `<Else>` and `<For>` stand
-out as keywords, and capitalised component tags get their own colour.
+the `<style>` block is CSS, every expression is Python, `<If>`, `<ElseIf>`,
+`<Else>` and `<For>` stand out as keywords, and capitalised component tags
+get their own colour.
 
 **Snippets**: type `weft` for a full component, `if`, `ifelse`, `for`, `bind`,
-`click`, `comp`, `state`, `prop`, `emit`, `oninit` and more.
+`click`, `comp`, `style`, `state`, `prop`, `emit`, `oninit` and more.
 
 **Editing basics**: bracket matching, `<!-- -->` comment toggling in the
 template and `#` in the code block, indentation on Enter inside a tag, and
@@ -53,7 +54,7 @@ Until the extension is on the Marketplace, install from a VSIX:
 ```bash
 npm install
 npm run package          # writes pyweft-<version>.vsix
-code --install-extension pyweft-0.2.0.vsix
+code --install-extension pyweft-0.2.1.vsix
 ```
 
 ## Roadmap

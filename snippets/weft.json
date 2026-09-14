@@ -26,6 +26,11 @@
     "prefix": "code",
     "body": ["<code>", "$0", "</code>"]
   },
+  "Style block": {
+    "prefix": "style",
+    "description": "Component-scoped CSS",
+    "body": ["<style>", ".${1:selector} { $0 }", "</style>"]
+  },
   "If": {
     "prefix": "if",
     "description": "<If cond=\"...\">",

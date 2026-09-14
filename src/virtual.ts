@@ -65,7 +65,13 @@ export interface VirtualDoc {
 // Same slicing rules as pyweft.parser.split_source: the code block is cut
 // out by greedy string scanning first, then the template is located.
 const CODE_RE = /<code\s*>([\s\S]*)<\/code\s*>/;
+const STYLE_RE = /<style\s*>([\s\S]*)<\/style\s*>/;
 const TEMPLATE_RE = /<template\s*>([\s\S]*)<\/template\s*>/;
+
+/** Replace a matched block with spaces so offsets elsewhere are unchanged. */
+function blank(src: string, m: RegExpExecArray): string {
+  return src.slice(0, m.index) + m[0].replace(/[^\n]/g, " ") + src.slice(m.index + m[0].length);
+}
 
 const TAG_RE =
   /<!--[\s\S]*?-->|<(\/?)([A-Za-z_][\w.\-:]*)((?:\s+[^\s=>\/]+(?:\s*=\s*(?:"[^"]*"|'[^']*'))?)*)\s*(\/?)>/g;
@@ -297,14 +303,12 @@ export function buildVirtual(src: string): VirtualDoc {
   const idx = new LineIndex(src);
   const b = new Builder();
 
+  // Same slicing order as the framework: code out first, then style, then
+  // the template is located in what remains.
   const code = CODE_RE.exec(src);
-  let blanked = src;
-  if (code) {
-    blanked =
-      src.slice(0, code.index) +
-      code[0].replace(/[^\n]/g, " ") +
-      src.slice(code.index + code[0].length);
-  }
+  let blanked = code ? blank(src, code) : src;
+  const style = STYLE_RE.exec(blanked);
+  if (style) blanked = blank(blanked, style);
   const tmpl = TEMPLATE_RE.exec(blanked);
 
   b.emit("from typing import Any");

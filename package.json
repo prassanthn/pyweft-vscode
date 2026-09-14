@@ -2,7 +2,7 @@
   "name": "pyweft",
   "displayName": "PyWeft",
   "description": "Language support for PyWeft .weft components: XML templates with Python code-behind.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "prassanthn",
   "license": "MIT",
   "repository": {
@@ -28,9 +28,6 @@
     "pyodide"
   ],
   "main": "./out/extension.js",
-  "activationEvents": [
-    "onLanguage:weft"
-  ],
   "extensionDependencies": [
     "ms-python.python"
   ],
@@ -55,7 +52,8 @@
         "path": "./syntaxes/weft.tmLanguage.json",
         "embeddedLanguages": {
           "meta.embedded.block.python": "python",
-          "meta.embedded.line.python": "python"
+          "meta.embedded.line.python": "python",
+          "meta.embedded.block.css": "css"
         }
       }
     ],

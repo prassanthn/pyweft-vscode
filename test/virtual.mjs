@@ -158,6 +158,16 @@ test("an empty <For> body and a self-closing <For> still parse", () => {
   assert.match(text, /for x in \(xs\):\n {12}pass/);
 });
 
+test("a <style> block contributes nothing and does not shift template mapping", () => {
+  const src = `<template><p>{{ count }}</p></template>\n<style>\np > span { color: red }\n</style>\n<code>\ncount: int = 0\n</code>\n`;
+  const v = buildVirtual(src);
+  assert.ok(pythonParses(v.text).ok, v.text);
+  assert.doesNotMatch(v.text, /color: red/);
+  const p = v.toVirtual({ line: 0, character: "<template><p>{{ ".length });
+  assert.ok(p);
+  assert.equal(v.text.split("\n")[p.line].trim(), "( count )");
+});
+
 test("a file with no code block still produces a class", () => {
   const { text } = buildVirtual(`<template><p>{{ 1 + 1 }}</p></template>`);
   assert.ok(pythonParses(text).ok, text);

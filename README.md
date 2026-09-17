@@ -54,7 +54,7 @@ Until the extension is on the Marketplace, install from a VSIX:
 ```bash
 npm install
 npm run package          # writes pyweft-<version>.vsix
-code --install-extension pyweft-0.2.1.vsix
+code --install-extension pyweft-0.2.2.vsix
 ```
 
 ## Roadmap

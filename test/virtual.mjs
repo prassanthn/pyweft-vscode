@@ -158,6 +158,37 @@ test("an empty <For> body and a self-closing <For> still parse", () => {
   assert.match(text, /for x in \(xs\):\n {12}pass/);
 });
 
+test("inline statement handlers are emitted bare, expressions in parentheses", () => {
+  const src = `<template>
+  <button @click="count += 1">a</button>
+  <button @click="show = not show; count = 0">b</button>
+  <button @click="remove(item, force=True)">c</button>
+  <button @click="ok == 1">d</button>
+  <button :disabled="count >= 3">e</button>
+</template>
+<code>
+count: int = 0
+show: bool = False
+ok: int = 1
+def remove(self, item, force=False):
+    pass
+</code>
+`;
+  const v = buildVirtual(src);
+  const t = v.text;
+  assert.match(t, /^ {8}count \+= 1$/m);
+  assert.match(t, /^ {8}show = not show; count = 0$/m);
+  assert.match(t, /^ {8}\(remove\(item, force=True\)\)$/m);
+  assert.match(t, /^ {8}\(ok == 1\)$/m);
+  assert.match(t, /^ {8}\(count >= 3\)$/m);
+  assert.ok(pythonParses(t).ok, t);
+  // mapping still holds on the bare line
+  const w = { line: 1, character: src.split("\n")[1].indexOf("count") };
+  const p = v.toVirtual(w);
+  assert.ok(p);
+  assert.deepEqual(v.toWeft(p), w);
+});
+
 test("a <style> block contributes nothing and does not shift template mapping", () => {
   const src = `<template><p>{{ count }}</p></template>\n<style>\np > span { color: red }\n</style>\n<code>\ncount: int = 0\n</code>\n`;
   const v = buildVirtual(src);

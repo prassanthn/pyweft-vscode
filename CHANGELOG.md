@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+- Inline statement handlers (`@click="count += 1"`, PyWeft 0.0.2) are
+  emitted as statements in the shadow document, so they get completions
+  instead of a syntax error.
+
 ## 0.2.1
 
 - `<style>` blocks (component-scoped CSS, PyWeft 0.0.2) are highlighted as

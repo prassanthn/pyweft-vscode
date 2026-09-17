@@ -211,6 +211,31 @@ function parseAttrs(attrText: string, attrStart: number): Attr[] {
   return out;
 }
 
+function isEventAttr(name: string): boolean {
+  return name.startsWith("@") || name.startsWith("py-at-");
+}
+
+/** Assignment (but not ==, !=, <=, >=, or keyword args in a call) or `;`. */
+function looksLikeStatement(value: string): boolean {
+  if (value.includes(";")) return true;
+  let depth = 0;
+  for (let i = 0; i < value.length; i++) {
+    const ch = value[i];
+    if ("([{".includes(ch)) depth++;
+    else if (")]}".includes(ch)) depth--;
+    else if (ch === "=" && depth === 0) {
+      const prev = value[i - 1];
+      const next = value[i + 1];
+      if (next === "=" || prev === "=" || prev === "!" || prev === "<" || prev === ">") {
+        i++;
+        continue;
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
 function isExpressionAttr(name: string): boolean {
   return (
     name.startsWith("@") ||
@@ -279,7 +304,10 @@ function walkTemplate(content: string, contentOffset: number, b: Builder, idx: L
     for (const a of attrs) {
       if (isFor && (a.name === "each" || a.name === "index")) continue;
       if (isExpressionAttr(a.name)) {
-        b.emitMapped(indent, "(", a.value, idx.pos(a.offset), ")", "expr");
+        // Event handlers may be inline statements (`count += 1`); those are
+        // not valid inside parentheses, so emit them bare.
+        const statement = isEventAttr(a.name) && looksLikeStatement(a.value);
+        b.emitMapped(indent, statement ? "" : "(", a.value, idx.pos(a.offset), statement ? "" : ")", "expr");
       } else {
         interpolations(a.value, a.offset);
       }

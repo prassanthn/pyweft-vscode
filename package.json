@@ -2,7 +2,7 @@
   "name": "pyweft",
   "displayName": "PyWeft",
   "description": "Language support for PyWeft .weft components: XML templates with Python code-behind.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "prassanthn",
   "license": "MIT",
   "repository": {
